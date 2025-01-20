@@ -4,10 +4,15 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
-RUN npm install -g pnpm && pnpm install
+RUN npm install -g pnpm 
 
-COPY . .
+RUN pnpm install
+
+COPY apps/notifications apps/notifications
+COPY libs libs
 
 RUN pnpm run build
 
@@ -23,7 +28,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install --prod
+RUN npm install -g pnpm 
+
+RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 CMD [ "node", "dist/apps/notifications/main" ]
