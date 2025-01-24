@@ -1,4 +1,4 @@
-import { LoggerModule } from '@app/common';
+import { HealthModule, LoggerModule } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -30,8 +30,8 @@ import { UsersModule } from './users/users.module';
         signOptions: { expiresIn: `${configService.get('JWT_EXPIRATION')}s` },
       }),
     }),
+    HealthModule,
   ],
-
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })
