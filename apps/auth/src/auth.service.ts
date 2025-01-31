@@ -27,5 +27,7 @@ export class AuthService {
       expires,
       httpOnly: true,
     });
+
+    return token;
   }
 }
