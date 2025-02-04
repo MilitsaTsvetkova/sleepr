@@ -33,7 +33,7 @@ export class ReservationsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
+    return this.reservationsService.findOne(+id);
   }
 
   @Patch(':id')
@@ -41,12 +41,12 @@ export class ReservationsController {
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
-    return this.reservationsService.update(id, updateReservationDto);
+    return this.reservationsService.update(+id, updateReservationDto);
   }
 
   @Roles('admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.reservationsService.remove(id);
+    return this.reservationsService.remove(+id);
   }
 }
