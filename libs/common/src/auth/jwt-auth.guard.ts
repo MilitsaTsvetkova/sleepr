@@ -10,7 +10,7 @@ import { Reflector } from '@nestjs/core';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { AUTH_SERVICE } from '../constants';
-import { UserDto } from '../dto';
+import { User } from '../models';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -31,12 +31,12 @@ export class JwtAuthGuard implements CanActivate {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
 
     return this.authClient
-      .send<UserDto>('authenticate', { Authentication: jwt })
+      .send<User>('authenticate', { Authentication: jwt })
       .pipe(
         tap((response) => {
           if (roles) {
             for (const role of roles) {
-              if (!response.roles.includes(role)) {
+              if (!response.roles.map((r) => r.name).includes(role)) {
                 this.logger.error('The user does not have valid roles');
                 throw new UnauthorizedException();
               }

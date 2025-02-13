@@ -1,4 +1,4 @@
-import { CurrentUser, UserDocument } from '@app/common';
+import { CurrentUser, User } from '@app/common';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-ath.guard';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,7 +15,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getUser(@CurrentUser() user: UserDocument) {
+  async getUser(@CurrentUser() user: User) {
     return user;
   }
 }

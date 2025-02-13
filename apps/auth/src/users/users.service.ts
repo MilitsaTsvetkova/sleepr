@@ -1,3 +1,4 @@
+import { Role, User } from '@app/common';
 import {
   Injectable,
   UnauthorizedException,
@@ -12,10 +13,14 @@ export class UsersService {
   constructor(private readonly userRepository: UsersRepository) {}
   async create(createUser: CreateUserDto) {
     await this.validateCreateUser(createUser.email);
-    return this.userRepository.create({
+
+    const user = new User({
       ...createUser,
       password: await bcrypt.hash(createUser.password, 10),
+      roles: createUser.roles?.map((role) => new Role(role)),
     });
+
+    return this.userRepository.create(user);
   }
 
   async validateCreateUser(email: string) {
@@ -36,7 +41,7 @@ export class UsersService {
     return user;
   }
 
-  async findById(id: string) {
-    return this.userRepository.findOne({ _id: id });
+  async findById(id: number) {
+    return this.userRepository.findOne({ id });
   }
 }

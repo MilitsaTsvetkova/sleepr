@@ -16,7 +16,6 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        DATABASE_URI: Joi.string().required(),
         PORT: Joi.number().required(),
         TCP_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
