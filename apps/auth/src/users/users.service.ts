@@ -42,6 +42,6 @@ export class UsersService {
   }
 
   async findById(id: number) {
-    return this.userRepository.findOne({ id });
+    return this.userRepository.findOne({ id }, { roles: true });
   }
 }

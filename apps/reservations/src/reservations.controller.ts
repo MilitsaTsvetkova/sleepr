@@ -44,7 +44,7 @@ export class ReservationsController {
     return this.reservationsService.update(+id, updateReservationDto);
   }
 
-  @Roles('admin')
+  @Roles('Admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.reservationsService.remove(+id);
