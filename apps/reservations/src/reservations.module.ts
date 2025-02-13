@@ -29,20 +29,17 @@ import { ReservationsService } from './reservations.service';
       validationSchema: Joi.object({
         DATABASE_URI: Joi.string().required(),
         PORT: Joi.number().required(),
-        AUTH_HOST: Joi.string().required(),
-        AUTH_PORT: Joi.number().required(),
-        PAYMENTS_HOST: Joi.string().required(),
-        PAYMENTS_PORT: Joi.number().required(),
+        RABBITMQ_URL: Joi.string().required(),
       }),
     }),
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('AUTH_HOST'),
-            port: configService.get('AUTH_PORT'),
+            urls: [configService.get<string>('RABBITMQ_URL')],
+            queue: 'auth',
           },
         }),
         inject: [ConfigService],
@@ -50,10 +47,10 @@ import { ReservationsService } from './reservations.service';
       {
         name: PAYMENTS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('PAYMENTS_HOST'),
-            port: configService.get('PAYMENTS_PORT'),
+            urls: [configService.get<string>('RABBITMQ_URL')],
+            queue: 'payments',
           },
         }),
         inject: [ConfigService],

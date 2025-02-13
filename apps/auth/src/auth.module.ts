@@ -21,6 +21,8 @@ import { UsersModule } from './users/users.module';
         TCP_PORT: Joi.number().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().default('1h'),
+        RABBITMQ_URL: Joi.string().required(),
+        RABBITMQ_QUEUE: Joi.string().required(),
       }),
     }),
     JwtModule.registerAsync({
