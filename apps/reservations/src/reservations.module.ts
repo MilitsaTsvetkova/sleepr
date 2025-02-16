@@ -1,11 +1,11 @@
 import {
   AUTH_PACKAGE_NAME,
-  AUTH_SERVICE,
+  AUTH_SERVICE_NAME,
   DatabaseModule,
   HealthModule,
   LoggerModule,
   PAYMENTS_PACKAGE_NAME,
-  PAYMENTS_SERVICE,
+  PAYMENTS_SERVICE_NAME,
 } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -40,7 +40,7 @@ import { ReservationsService } from './reservations.service';
     }),
     ClientsModule.registerAsync([
       {
-        name: AUTH_SERVICE,
+        name: AUTH_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
           transport: Transport.GRPC,
           options: {
@@ -52,7 +52,7 @@ import { ReservationsService } from './reservations.service';
         inject: [ConfigService],
       },
       {
-        name: PAYMENTS_SERVICE,
+        name: PAYMENTS_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
           transport: Transport.GRPC,
           options: {
