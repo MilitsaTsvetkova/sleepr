@@ -1,9 +1,11 @@
+import { AUTH_PACKAGE_NAME } from '@app/common';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
+import { join } from 'path';
 import { AuthModule } from './auth.module';
 
 async function bootstrap() {
@@ -11,10 +13,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.connectMicroservice({
-    transport: Transport.TCP,
+    transport: Transport.GRPC,
     options: {
-      host: '0.0.0.0',
-      port: configService.get('TCP_PORT'),
+      package: AUTH_PACKAGE_NAME,
+      protoPath: join(__dirname, '../../../proto/auth.proto'),
+      url: configService.getOrThrow<string>('AUTH_GRPC_URL'),
     },
   });
   app.use(cookieParser());
