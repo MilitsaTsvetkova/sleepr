@@ -1,8 +1,13 @@
-import { LoggerModule, NOTIFICATIONS_SERVICE } from '@app/common';
+import {
+  LoggerModule,
+  NOTIFICATIONS_PACKAGE_NAME,
+  NOTIFICATIONS_SERVICE,
+} from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import * as Joi from 'joi';
+import { join } from 'path';
 import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 
@@ -22,10 +27,11 @@ import { PaymentsService } from './payments.service';
       {
         name: NOTIFICATIONS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.GRPC,
           options: {
-            host: configService.get('NOTIFICATIONS_HOST'),
-            port: configService.get('NOTIFICATIONS_PORT'),
+            package: NOTIFICATIONS_PACKAGE_NAME,
+            protoPath: join(__dirname, '../../../proto/notifications.proto'),
+            url: configService.getOrThrow<string>('NOTIFICATIONS_GRPC_URL'),
           },
         }),
         inject: [ConfigService],
