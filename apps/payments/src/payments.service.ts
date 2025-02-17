@@ -1,5 +1,4 @@
 import {
-  NOTIFICATIONS_SERVICE,
   NOTIFICATIONS_SERVICE_NAME,
   NotificationsServiceClient,
 } from '@app/common';
@@ -16,7 +15,7 @@ export class PaymentsService {
   constructor(
     private readonly configService: ConfigService,
     private readonly logger: Logger,
-    @Inject(NOTIFICATIONS_SERVICE)
+    @Inject(NOTIFICATIONS_SERVICE_NAME)
     private readonly client: ClientGrpc,
   ) {}
 
