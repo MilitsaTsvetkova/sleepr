@@ -39,4 +39,8 @@ export class UsersService {
   async findById(id: string) {
     return this.userRepository.findOne({ _id: id });
   }
+
+  async findAll() {
+    return this.userRepository.find({});
+  }
 }
