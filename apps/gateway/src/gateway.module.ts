@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import * as Joi from 'joi';
 import { authContext } from './auth.context';
 
 @Module({
@@ -25,6 +26,10 @@ import { authContext } from './auth.context';
               {
                 name: 'auth',
                 url: configService.getOrThrow('AUTH_GRAPHQL_URL'),
+              },
+              {
+                name: 'payments',
+                url: configService.getOrThrow('PAYMENTS_GRAPHQL_URL'),
               },
             ],
           }),
@@ -58,6 +63,13 @@ import { authContext } from './auth.context';
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: Joi.object({
+        RESERVATIONS_GRAPHQL_URL: Joi.string().required(),
+        AUTH_GRAPHQL_URL: Joi.string().required(),
+        PAYMENTS_GRAPHQL_URL: Joi.string().required(),
+        AUTH_HOST: Joi.string().required(),
+        AUTH_PORT: Joi.number().required(),
+      }),
     }),
     LoggerModule,
   ],
