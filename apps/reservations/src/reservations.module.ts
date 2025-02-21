@@ -1,6 +1,5 @@
 import {
   AUTH_SERVICE,
-  DatabaseModule,
   HealthModule,
   LoggerModule,
   PAYMENTS_SERVICE,
@@ -9,20 +8,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import * as Joi from 'joi';
-import {
-  ReservationDocument,
-  reservationSchema,
-} from './models/reservation.schema';
+import { PrismaService } from './prisma.service';
 import { ReservationsController } from './reservations.controller';
-import { ReservationsRepository } from './reservations.repository';
 import { ReservationsService } from './reservations.service';
 
 @Module({
   imports: [
-    DatabaseModule,
-    DatabaseModule.forFeature([
-      { name: ReservationDocument.name, schema: reservationSchema },
-    ]),
     LoggerModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -62,6 +53,6 @@ import { ReservationsService } from './reservations.service';
     HealthModule,
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationsRepository],
+  providers: [ReservationsService, PrismaService],
 })
 export class ReservationsModule {}
