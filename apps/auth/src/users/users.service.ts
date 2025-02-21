@@ -4,23 +4,25 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UsersRepository) {}
+  constructor(private readonly prismaService: PrismaService) {}
   async create(createUser: CreateUserDto) {
     await this.validateCreateUser(createUser.email);
-    return this.userRepository.create({
-      ...createUser,
-      password: await bcrypt.hash(createUser.password, 10),
+    return this.prismaService.user.create({
+      data: {
+        email: createUser.email,
+        password: await bcrypt.hash(createUser.password, 10),
+      },
     });
   }
 
   async validateCreateUser(email: string) {
     try {
-      await this.userRepository.findOne({ email });
+      await this.prismaService.user.findUnique({ where: { email } });
     } catch (error) {
       return;
     }
@@ -28,7 +30,7 @@ export class UsersService {
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.userRepository.findOne({ email });
+    const user = await this.prismaService.user.findUnique({ where: { email } });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credentials are invalid');
@@ -36,7 +38,7 @@ export class UsersService {
     return user;
   }
 
-  async findById(id: string) {
-    return this.userRepository.findOne({ _id: id });
+  async findById(id: number) {
+    return this.prismaService.user.findUniqueOrThrow({ where: { id } });
   }
 }
